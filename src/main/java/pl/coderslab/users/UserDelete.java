@@ -1,4 +1,5 @@
 package pl.coderslab.users;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +15,13 @@ public class UserDelete extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
 
+        UserDao userDao = new UserDao();
+        userDao.delete(id);
+
+        getServletContext().getRequestDispatcher("/user/list")
+                .forward(req, resp);
 
     }
 }
