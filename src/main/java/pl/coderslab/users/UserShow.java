@@ -15,7 +15,16 @@ public class UserShow extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
 
+        User userToShow = new User();
+        UserDao userDao = new UserDao();
+
+        userToShow = userDao.read(id);
+
+        req.setAttribute("userToShow", userToShow);
+        getServletContext().getRequestDispatcher("/users/show.jsp")
+                .forward(req, resp);
 
     }
 }
