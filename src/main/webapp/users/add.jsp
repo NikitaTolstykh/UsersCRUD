@@ -7,7 +7,6 @@
 <%@ include file="/header.jsp" %>
 <div class="container-fluid">
 
-
     <!-- Page Heading -->
 <c:if test="${not empty message}">
     <p style="color:red">${message}</p>

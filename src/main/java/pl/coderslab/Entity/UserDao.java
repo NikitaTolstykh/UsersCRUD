@@ -16,6 +16,7 @@ public class UserDao {
     private static final String UPDATE = "UPDATE users SET email = ?,username = ?, password = ? WHERE ID = ?;";
     private static final String FIND_ALL = "SELECT * FROM users;";
     private static final String DELETE = "DELETE FROM users WHERE id = ?;";
+    private static final String EMAIL_EXISTS = "SELECT COUNT(*) FROM users WHERE email = ?;";
 
 
     private static String hashPassword(String password) {
@@ -112,5 +113,23 @@ public class UserDao {
             ex.printStackTrace();
         }
         return users;
+    }
+
+    public boolean isEmailExists(String email) {
+        try (Connection conn = DbUtil.getConnection()) {
+            try (PreparedStatement ps = conn.prepareStatement(EMAIL_EXISTS)) {
+                ps.setString(1, email);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        if (rs.getInt(1) > 0) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 }

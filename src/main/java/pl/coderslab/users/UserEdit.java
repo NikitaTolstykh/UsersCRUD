@@ -1,4 +1,5 @@
 package pl.coderslab.users;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +15,39 @@ public class UserEdit extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int id = Integer.parseInt(req.getParameter("id"));
 
+        UserDao userDao = new UserDao();
+        User read = new User();
+        read = userDao.read(id);
 
+        req.setAttribute("userInfo", read);
+        getServletContext().getRequestDispatcher("/users/edit.jsp")
+                .forward(req, resp);
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String email = req.getParameter("email");
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        int id = Integer.parseInt(req.getParameter("id"));
+
+        User userToUpdate = new User();
+        UserDao userDao = new UserDao();
+
+        boolean isEmailExists = userDao.isEmailExists(email);
+        if (isEmailExists) {
+            req.setAttribute("message", "User with this email already exists");
+            getServletContext().getRequestDispatcher("/users/edit.jsp")
+                    .forward(req, resp);
+            return;
+        }
+
+        userToUpdate = userDao.read(id);
+        userDao.update(userToUpdate);
+
+        resp.sendRedirect("/user/list");
     }
 }

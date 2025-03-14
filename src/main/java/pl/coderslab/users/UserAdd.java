@@ -21,16 +21,24 @@ public class UserAdd extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        UserDao userDao = new UserDao();
+
         String email = req.getParameter("email");
         String username = req.getParameter("username");
         String password = req.getParameter("password");
+
+        boolean isEmailExists = userDao.isEmailExists(email);
+
 
         if(email == null || email.isBlank() || username == null
                 || username.isBlank() || password == null || password.isBlank()) {
             req.setAttribute("message","Fill all fields");
             getServletContext().getRequestDispatcher("/users/add.jsp").forward(req, resp);
             return;
-
+        } else if(isEmailExists) {
+            req.setAttribute("message","User with this email already exists");
+            getServletContext().getRequestDispatcher("/users/add.jsp").forward(req, resp);
+            return;
         }
 
         User user = new User();
@@ -38,7 +46,6 @@ public class UserAdd extends HttpServlet {
         user.setUsername(username);
         user.setPassword(password);
 
-        UserDao userDao = new UserDao();
         userDao.create(user);
 
         resp.sendRedirect(req.getContextPath() + "/user/list");
