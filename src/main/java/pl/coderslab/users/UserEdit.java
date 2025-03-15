@@ -36,16 +36,23 @@ public class UserEdit extends HttpServlet {
 
         User userToUpdate = new User();
         UserDao userDao = new UserDao();
+        userToUpdate = userDao.read(id);
 
         boolean isEmailExists = userDao.isEmailExists(email);
-        if (isEmailExists) {
+        if (isEmailExists && !(userToUpdate.getEmail().equals(email))) {
             req.setAttribute("message", "User with this email already exists");
             getServletContext().getRequestDispatcher("/users/edit.jsp")
                     .forward(req, resp);
             return;
         }
 
-        userToUpdate = userDao.read(id);
+        if (!(password.isBlank()) && password != null) {
+            userToUpdate.setPassword(password);
+        }
+
+        userToUpdate.setEmail(email);
+        userToUpdate.setUsername(username);
+        userToUpdate.setId(id);
         userDao.update(userToUpdate);
 
         resp.sendRedirect("/user/list");
