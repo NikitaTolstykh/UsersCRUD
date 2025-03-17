@@ -15,6 +15,9 @@
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Welcome to Admin Panel</h1>
                                 </div>
+                                <c:if test="${not empty message}">
+                                    <div class="alert alert-danger text-center">${message}</div>
+                                </c:if>
                                 <div class="text-center">
                                     <a href="<c:url value='/admin/login' />" class="btn btn-primary btn-user btn-block">
                                         Login

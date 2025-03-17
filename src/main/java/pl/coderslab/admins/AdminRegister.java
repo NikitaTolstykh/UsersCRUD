@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import pl.coderslab.Entity.Admin;
 import pl.coderslab.Entity.AdminDao;
 
@@ -62,6 +63,12 @@ public class AdminRegister extends HttpServlet {
         adminToRegister.setPassword(password);
 
         adminDao.create(adminToRegister);
+
+        Admin admin = adminDao.findByEmail(email);
+
+        HttpSession session = req.getSession();
+        session.setAttribute("admin", admin);
+
         resp.sendRedirect(req.getContextPath() + "/user/list");
 
 
