@@ -8,9 +8,7 @@
 <div class="container-fluid">
 
     <!-- Page Heading -->
-<c:if test="${not empty message}">
-    <p style="color:red">${message}</p>
-</c:if>
+
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
 
         <h1 class="h3 mb-0 text-gray-800">UsersCRUD</h1>
@@ -23,6 +21,9 @@
             <h6 class="m-0 font-weight-bold text-primary">Add user</h6>
         </div>
         <div class="card-body">
+            <c:if test="${not empty message}">
+                <div class="alert alert-danger text-center">${message}</div>
+            </c:if>
             <form action="<c:url value='/user/add'/>" method="post">
                 <div class="form-group">
                     <label for="userName">Name</label>

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class AdminDao {
    private static final String CREATE_ADMIN = "INSERT INTO admins(email, username, password) VALUES (?,?,?);";
-   private static final String ALL_ADMINS = "SELECT * FROM admins";
+   private static final String FIND_BY_EMAIL = "SELECT * FROM admins WHERE email = ? ";
    private static final String EMAIL_EXISTS = "SELECT COUNT(*) FROM admins WHERE email = ?;";
 
    private static String hashedPassword(String password){
@@ -40,26 +40,28 @@ public class AdminDao {
        return admin;
    }
 
-   public List<Admin> adminList() {
-       List<Admin> adminList = new ArrayList<>();
+  public Admin findByEmail(String email) {
        try(Connection conn = DbUtil.getConnection()) {
-           try(PreparedStatement ps = conn.prepareStatement(ALL_ADMINS)) {
+           try(PreparedStatement ps = conn.prepareStatement(FIND_BY_EMAIL)) {
+               ps.setString(1, email);
                try(ResultSet rs = ps.executeQuery()) {
-                   while (rs.next()){
-                       adminList.add(new Admin(rs.getInt("id"),
-                               rs.getString("email"),
-                               rs.getString("username"),
-                               rs.getString("password")
-                       ));
+                   if (rs.next()){
+                       Admin foundAdmin = new Admin();
+                       foundAdmin.setId(rs.getInt("id"));
+                       foundAdmin.setEmail(rs.getString("email"));
+                       foundAdmin.setUsername(rs.getString("username"));
+                       foundAdmin.setPassword(rs.getString("password"));
+                       return foundAdmin;
                    }
                }
            }
 
-       } catch (SQLException ex) {
+       }catch (SQLException ex){
            ex.printStackTrace();
        }
-       return adminList;
-   }
+
+       return null;
+  }
 
    public boolean isEmailExist(String email) {
        try(Connection conn = DbUtil.getConnection()){

@@ -23,9 +23,9 @@ public class UserAdd extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UserDao userDao = new UserDao();
 
-        String email = req.getParameter("email");
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
+        String email = req.getParameter("email").trim();
+        String username = req.getParameter("username").trim();
+        String password = req.getParameter("password").trim();
 
         boolean isEmailExists = userDao.isEmailExists(email);
 

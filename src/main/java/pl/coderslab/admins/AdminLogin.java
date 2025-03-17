@@ -35,14 +35,13 @@ public class AdminLogin extends HttpServlet {
         }
 
         AdminDao adminDao = new AdminDao();
-        List<Admin> adminList = adminDao.adminList();
+        Admin admin = adminDao.findByEmail(email);
 
-        for (Admin ad : adminList) {
-            if ((ad.getEmail().equals(email)) && BCrypt.checkpw(password, ad.getPassword())) {
-                resp.sendRedirect(req.getContextPath() + "/user/list");
-                return;
-            }
+        if (admin != null && BCrypt.checkpw(password, admin.getPassword())){
+           resp.sendRedirect(req.getContextPath() + "/user/list");
+            return;
         }
+
         req.setAttribute("message", "Wrong email or password");
         getServletContext().getRequestDispatcher("/users/login.jsp")
                 .forward(req, resp);
