@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
 import pl.coderslab.Entity.Admin;
 import pl.coderslab.Entity.AdminDao;
@@ -37,8 +38,10 @@ public class AdminLogin extends HttpServlet {
         AdminDao adminDao = new AdminDao();
         Admin admin = adminDao.findByEmail(email);
 
-        if (admin != null && BCrypt.checkpw(password, admin.getPassword())){
-           resp.sendRedirect(req.getContextPath() + "/user/list");
+        if (admin != null && BCrypt.checkpw(password, admin.getPassword())) {
+            HttpSession session = req.getSession();
+            session.setAttribute("admin", admin);
+            resp.sendRedirect(req.getContextPath() + "/user/list");
             return;
         }
 
