@@ -4,9 +4,7 @@
 <%@ include file="/header.jsp" %>
 
 <div class="container-fluid">
-<c:if test="${not empty message}">
-    <p style="color:red">${message}</p>
-</c:if>
+
 
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
 
@@ -20,6 +18,9 @@
             <h6 class="m-0 font-weight-bold text-primary">Edit user</h6>
         </div>
         <div class="card-body">
+            <c:if test="${not empty message}">
+                <div class="alert alert-danger text-center">${message}</div>
+            </c:if>
             <form action="<c:url value='/user/edit'/>" method="post">
                 <div class="form-group">
                     <label for="userName">Name</label>

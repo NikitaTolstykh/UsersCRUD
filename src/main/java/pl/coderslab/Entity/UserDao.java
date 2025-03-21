@@ -72,7 +72,11 @@ public class UserDao {
             try (PreparedStatement ps = conn.prepareStatement(UPDATE)) {
                 ps.setString(1, user.getEmail());
                 ps.setString(2, user.getUsername());
-                ps.setString(3, hashPassword(user.getPassword()));
+                if (user.getPassword().startsWith("$2a")){
+                    ps.setString(3, user.getPassword());
+                } else {
+                    ps.setString(3, hashPassword(user.getPassword()));
+                }
                 ps.setInt(4, user.getId());
                 ps.executeUpdate();
             }
@@ -120,10 +124,8 @@ public class UserDao {
             try (PreparedStatement ps = conn.prepareStatement(EMAIL_EXISTS)) {
                 ps.setString(1, email);
                 try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        if (rs.getInt(1) > 0) {
-                            return true;
-                        }
+                    if(rs.next()){
+                        return  rs.getInt(1) > 0;
                     }
                 }
             }
