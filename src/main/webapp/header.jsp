@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+<c:set var="adminLogged" value="${sessionScope.admin}" />
 <html>
 <head>
     <meta charset="utf-8">
@@ -47,6 +48,12 @@
         <div id="content">
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                 <ul class="navbar-nav ml-auto">
+                    <c:if test="${not empty adminLogged}">
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome, ${adminLogged.username}!</span>
+                        </li>
+                    </c:if>
                 </ul>
             </nav>
+
             <div class="container-fluid">
